@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie_details/screens/movie_details.dart';
+import 'package:movie_details/screens/movie_details_screen.dart';
 
 import '../cubit/movie_cubit.dart';
 
@@ -58,10 +59,16 @@ class _MoviesScreenState extends State<MoviesScreen> {
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(12),
                               topRight: Radius.circular(12)),
-                          child: Image.network(
+                          child: CachedNetworkImage(
                             width: double.infinity,
-                            movie.poster,
                             fit: BoxFit.fitWidth,
+                            imageUrl: movie.poster,
+                            placeholder: (context, url) => const SizedBox(
+                              height: 150,
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
                         ),
                         Padding(

@@ -22,11 +22,11 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) => MovieCubit(CacheManager()),
           ),
           BlocProvider<MovieDetailsCubit>(
-            create: (BuildContext context) =>
-                MovieDetailsCubit(CacheManager()),
+            create: (BuildContext context) => MovieDetailsCubit(CacheManager()),
           ),
         ],
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Movie App',
           theme: ThemeData(
             primarySwatch: Colors.blue,

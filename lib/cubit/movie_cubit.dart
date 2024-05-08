@@ -20,15 +20,14 @@ class MovieCubit extends Cubit<MovieState> {
       const url = "https://www.omdbapi.com/?apikey=3d277ae5&s=avenger";
       final (isValid, cached) = await prefs.getValidCache(url);
       if (isValid) {
-        debugPrint("From Cache -------------------------->");
+        debugPrint("Get Movie From Cache -------------------------->");
         final List<MovieData> movies = (json.decode(cached!.data) as List)
             .map((data) => MovieData.fromJson(data))
             .toList();
         emit(MovieSuccess(movieData: movies));
         return;
       }
-
-      debugPrint("From API -------------------------->");
+      debugPrint("Get Movie From API -------------------------->");
 
       final response = await DioClient.dio.get(url);
 

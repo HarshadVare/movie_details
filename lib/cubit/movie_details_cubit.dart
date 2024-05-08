@@ -21,13 +21,14 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
       final url = "https://www.omdbapi.com/?i=$id&apikey=3d277ae5";
       final (isValid, cached) = await prefs.getValidCache(url);
       if (isValid) {
+        debugPrint("Get Movie Details From Cache -------------------------->");
         final movieDetails =
             MovieDetailsData.fromJson(json.decode(cached!.data));
         emit(MovieDetailsSuccess(movieDetailsData: movieDetails));
         return;
       }
 
-      debugPrint("From API -------------------------->");
+      debugPrint("Get Movie Details From API -------------------------->");
       final response = await DioClient.dio.get(url);
 
       if (response.statusCode == 200) {
@@ -37,9 +38,7 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
       } else {
         throw Exception("Cannot fetch the required record");
       }
-    } catch (e, s) {
-      print(e);
-      print(s);
+    } catch (e) {
       emit(MovieDetailsError(error: e.toString()));
     }
   }
