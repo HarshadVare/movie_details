@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_details/screens/movie_details.dart';
 
 import '../cubit/movie_cubit.dart';
-import 'movie_details.dart';
 
-class MoviesScreen extends StatelessWidget {
+class MoviesScreen extends StatefulWidget {
   const MoviesScreen({super.key});
+
+  @override
+  State<MoviesScreen> createState() => _MoviesScreenState();
+}
+
+class _MoviesScreenState extends State<MoviesScreen> {
+  @override
+  void initState() {
+    context.read<MovieCubit>().getMovies();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +38,62 @@ class MoviesScreen extends StatelessWidget {
             );
           } else if (movieState is MovieSuccess) {
             return ListView.builder(
+              padding: const EdgeInsets.all(12),
               itemCount: movieState.movieData.length,
               itemBuilder: (context, index) {
                 final movie = movieState.movieData[index];
-                return ListTile(
-                  title: Text(movie.title),
-                  leading: Text(movie.imdbId),
+                return InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MovieDetailScreen()),
-                    );
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MovieDetailScreen(
+                              id: movie.imdbId,
+                              movieName: movie.title,
+                            )));
                   },
+                  child: Card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12)),
+                          child: Image.network(
+                            width: double.infinity,
+                            movie.poster,
+                            fit: BoxFit.fitWidth,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            movie.title,
+                            textAlign: TextAlign.start,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Row(
+                            children: [
+                              Chip(
+                                label: Text(movie.year),
+                                shape: const StadiumBorder(),
+                              ),
+                              const SizedBox(width: 10),
+                              Chip(
+                                label: Text(movie.type.name),
+                                shape: const StadiumBorder(),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 );
               },
             );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_details/cubit/movie_cubit.dart';
+import 'package:movie_details/cubit/movie_details_cubit.dart';
 
 import 'screens/movie_screen.dart';
 import 'service/shared_preference.dart';
@@ -15,15 +16,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Movie App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: BlocProvider(
-        create: (context) => MovieCubit(MySharedPreferences())..getMovies(),
-        child: const MoviesScreen(),
-      ),
-    );
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<MovieCubit>(
+            create: (BuildContext context) => MovieCubit(CacheManager()),
+          ),
+          BlocProvider<MovieDetailsCubit>(
+            create: (BuildContext context) =>
+                MovieDetailsCubit(CacheManager()),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Movie App',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: const MoviesScreen(),
+        ));
   }
 }

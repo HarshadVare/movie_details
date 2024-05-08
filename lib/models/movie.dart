@@ -15,11 +15,11 @@ class EnumValues<T> {
 final typeValues = EnumValues({"movie": Type.movie});
 
 class MovieData {
-  String title;
-  String year;
-  String imdbId;
-  Type type;
-  String poster;
+  final String title;
+  final String year;
+  final String imdbId;
+  final Type type;
+  final String poster;
 
   MovieData({
     required this.title,
