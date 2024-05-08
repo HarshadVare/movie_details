@@ -105,7 +105,7 @@ class _MoviesScreenState extends State<MoviesScreen> {
               },
             );
           } else {
-            return const Text("Something went wrong");
+            return const Center(child: Text("Something went wrong"));
           }
         },
       ),
